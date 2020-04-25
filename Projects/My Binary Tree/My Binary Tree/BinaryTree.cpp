@@ -17,6 +17,7 @@ ErrorCodes BinaryTree::insertNode(int value) {
 	newNode->value = value;
 
 	if (NULL == m_pHead) {
+		// Head case.
 		m_pHead = newNode;
 		return ecRetCode;
 	}

@@ -340,8 +340,16 @@ LinkedList::Node* LinkedList::mergeSort(Node* pListHead) {
 }
 
 LinkedList::Node* LinkedList::merge(Node* pL, Node* pR) {
-	Node* pNewList = (pL->value <= pR->value) ? pL : pL;
-	(pL == pNewList) ? pL = pL->pNext : pR = pR->pNext; // Need to make sure to increment pL or pR
+	if (NULL == pL)
+		return pR;
+	else if (NULL == pR)
+		return pL;
+
+	Node* pNewList = (pL->value <= pR->value) ? pL : pR;
+	if (pL == pNewList)
+		pL = pL->pNext;
+	else
+		pR = pR->pNext;
 	Node* pNewEnd = pNewList;
 
 	while ((NULL != pL) && (NULL != pR)) {

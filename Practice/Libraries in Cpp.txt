@@ -1,0 +1,14 @@
+Libraries
+
+Process of building a program:
+Preprocessor - essentially anything that begins with #
+Compilation - source files are compiled into object files (.o)
+Link - combine all .o files with any libraries into an executable file (.exe or no suffix)
+
+Choice between static and dynamic libraries when running code.
+Static libraries: Files containing c++ code which are actually compiled into code. 
+Dynamic libraries: Contains code the program finds while the program is running.
+			cout uses the std dynamic library.
+
+Static: windows - XYZ.lib UNIX/Linux - XYZ.a
+Dynamic: windows - XYZ.dll UNIX/Linux - libXYZ.so Mac - XYZ.dylib 

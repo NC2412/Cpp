@@ -1,0 +1,32 @@
+Binary Numbers:
+
+372 = 3 * 100 and 7 * 10 and 2 * 1
+
+binary num = 1 0 1 1
+index =      3 2 1 0
+first number is multiplies by 1, second by 2, third by 4, fourth by 8
+2^index
+
+8*1 + 0*4 + 2*1 + 1*1 = 8 + 2 + 1 = 11
+
+
+
+Computer memory:
+
+visualize as boxes next to each other, where each box is a bit. I will use B for box/bit
+
+BBBB	this is 4 bits
+there are minimum and maximum values you can put in each bit
+
+BBBBBBBB 	this is a byte, a byte has 8 bits
+
+
+In c++ there are two types of memory: the stack and the heap. 
+
+The stack is memory associated with local variables and the addresses of functions.
+	The stack is like a stack of plates.
+	This is also why you can have a 'stack overflow' when you call a function too many times or create too many variables.
+
+The heap is all the memory available to the computer.
+	The new keyword allocates memory on the heap.
+	if you have an array that can become too large, use the new keyword so you don't get a stack overflow.

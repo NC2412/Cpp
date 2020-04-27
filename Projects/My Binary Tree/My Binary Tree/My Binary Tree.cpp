@@ -6,14 +6,24 @@ using namespace std;
 int main() {
 	BinaryTree tree;
 
-	int addArray[] = { 10, 3, 11, 23, 1 };
+	int addArray[] = { 10, 5, 3, 7, 9, 12, 14, 16, 20 };
 	for (int v : addArray) {
  		if (ErrorCodes::FAILURE == tree.insertNode(v)) {
 			return 1;
 		}
 	}
 
-	// tree.printTree();
+	/*
+		iPrintType values:
+		1 - in-order
+		2 - pre-order
+		3 - post-order
+		4 - level-order
+	*/
+	for (int i = 1; i <= 3; i++) {
+		tree.printTree(i);
+		cout << endl;
+	}
 
 	return 0;
 }

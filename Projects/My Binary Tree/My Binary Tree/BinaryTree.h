@@ -5,9 +5,8 @@ using namespace std;
 
 class BinaryTree
 {
-
 	struct Node {
-		int value;
+		int value = -1;
 
 		Node* pLeft  = NULL;
 		Node* pRight = NULL;
@@ -20,11 +19,17 @@ public:
 
 	// Operating methods
 	ErrorCodes insertNode(int value);
+	ErrorCodes deleteNode(int delValue);
 
 	// TODO
-	// - fix internal node case insert
 	// - implement in order, post order, pre order, level order.
-	ErrorCodes printTree();
+	ErrorCodes printTree(int iPrintType);
+
+private:
+	ErrorCodes printInOrder(Node* pNode);
+	ErrorCodes printPreOrder(Node* pNode);
+	ErrorCodes printPostOrder(Node* pNode);
+	ErrorCodes printLevelOrder(Node* pNode);
 
 private:
 	// Member variables

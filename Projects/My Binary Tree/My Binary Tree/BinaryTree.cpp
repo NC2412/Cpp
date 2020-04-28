@@ -7,7 +7,7 @@ BinaryTree::BinaryTree() {
 }
 
 BinaryTree::~BinaryTree() {
-	//deleteList();
+	deleteList(m_pHead);
 }
 
 ErrorCodes BinaryTree::insertNode(int value) {
@@ -51,21 +51,45 @@ ErrorCodes BinaryTree::insertNode(int value) {
 ErrorCodes BinaryTree::deleteNode(int delValue) {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 	Node* pCur = m_pHead;
+	Node* pPrev = NULL;
 
 	if (NULL == pCur)
 		return ecRetCode;
 
+	if (m_pHead->value == delValue) {
+		// Do a TON
+	}
+
 	while (pCur) {
 		if (pCur->value == delValue) {
-			break;
+			if (NULL == pCur->pLeft && NULL == pCur->pRight)
+				// Leaf case
+				delete pCur;
+
+			if (NULL == pCur->pLeft) {
+				// Left child case
+				if (pPrev->pLeft == pCur) {
+					// pCur is left child
+					pPrev->pLeft = pCur->pLeft;
+				}
+				else {
+					// pCur is right child
+					pPrev->pRight = pCur->pLeft;
+				}
+			}
+			else if (NULL == pCur->pRight) {
+				// Right child case
+			}
 		}
 		
+		pPrev = pCur;
 		if (delValue < pCur->value)
 			pCur = pCur->pLeft;
 		else
 			pCur = pCur->pRight;
 	}
 
+	return ecRetCode;
 }
 
 /*
@@ -155,6 +179,31 @@ ErrorCodes BinaryTree::printPostOrder(Node* pNode) {
 
 ErrorCodes BinaryTree::printLevelOrder(Node* pNode) {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+
+	if (pNode->pNext)
+		printLevelOrder(pNode->pNext);
+
+	cout << pNode->value << endl;
+
+	return ecRetCode;
+}
+
+//
+// deleteList will take a node as a parameter
+// deleteList is a recursive method using post-order to delete the nodes, so we don't have to do any rebalancing.
+ErrorCodes BinaryTree::deleteList(Node* pNode) {
+	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+
+	if (NULL == pNode)
+		return ecRetCode;
+
+	if (pNode->pLeft)
+		deleteList(pNode->pLeft);
+
+	if (pNode->pRight)
+		deleteList(pNode->pRight);
+
+	delete pNode;
 
 	return ecRetCode;
 }

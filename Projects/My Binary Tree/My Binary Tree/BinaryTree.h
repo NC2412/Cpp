@@ -8,8 +8,9 @@ class BinaryTree
 	struct Node {
 		int value = -1;
 
-		Node* pLeft  = NULL;
+		Node* pLeft = NULL;
 		Node* pRight = NULL;
+		Node* pNext = NULL;
 	};
 
 public:
@@ -30,6 +31,8 @@ private:
 	ErrorCodes printPreOrder(Node* pNode);
 	ErrorCodes printPostOrder(Node* pNode);
 	ErrorCodes printLevelOrder(Node* pNode);
+
+	ErrorCodes deleteList(Node* pNode);
 
 private:
 	// Member variables

@@ -25,6 +25,15 @@ public:
 	// TODO
 	// - implement in order, post order, pre order, level order.
 	ErrorCodes printTree(int iPrintType);
+	// use a queue to iteratively print level order
+	// use delete node as recursive
+	//		- use helper methods
+	// 
+	// closest common ancestor
+	//	- given two nodes, what is their common parent?
+	//
+	// threading siblings
+	//  - left right next
 
 private:
 	ErrorCodes printInOrder(Node* pNode);

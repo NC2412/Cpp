@@ -15,6 +15,7 @@ using namespace std;
 
 class LinkedList
 {
+public:
 	// Creating the Node struct.
 	struct Node {
 
@@ -23,6 +24,7 @@ class LinkedList
 		// next must be a pointer because it will point to the next Node object.
 		Node* pNext = NULL;
 	};
+
 public: 
 	// CTORs and DTORs
 	LinkedList();
@@ -40,18 +42,11 @@ public:
 	bool hasCycle();
 	int nFromTail(int nthfromtail);
 	ErrorCodes printList();
-	ErrorCodes deleteList();
 	
 	// Accessor methods
 	inline bool isSorted() { return m_fisSorted ? true : false; }
 
 	// Mutator methods
-	
-	// To do:
-	/* 
-	sortList
-	*/
-	
 	inline void toggleSort() { if (m_fisSorted) { m_fisSorted = false; } else { m_fisSorted = true; /*sortList();*/ } }
 
 private:
@@ -60,6 +55,7 @@ private:
 	ErrorCodes addToEnd(int value);
 	Node* mergeSort(Node* pList);
 	Node* merge(Node* pListL, Node* pListR);
+	ErrorCodes deleteList();
 
 private:
 	// Member variables

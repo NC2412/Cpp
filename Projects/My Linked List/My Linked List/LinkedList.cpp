@@ -97,6 +97,10 @@ ErrorCodes LinkedList::deleteIndex(unsigned int removeIndex) {
 ErrorCodes LinkedList::removeDuplicates() {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 
+	if (m_fisSorted == false) {
+		sortList();
+	}
+
 	Node* pCur = m_pHead;
 	Node* pNext = pCur->pNext;
 	
@@ -231,23 +235,6 @@ Exit:
 	return ecRetCode;
 }
 
-ErrorCodes LinkedList::deleteList() {
-	ErrorCodes ecRetCodes = ErrorCodes::SUCCESS;
-	
-	// Check to see if there is anything to delete.
-	if (NULL == m_pHead) {
-		ecRetCodes = ErrorCodes::FAILURE;
-		return ecRetCodes;
-	}
-
-	while (NULL != m_pHead) {
-		Node* delNode = m_pHead;
-		m_pHead = m_pHead->pNext;
-		delete delNode;
-	}
-	return ecRetCodes;
-}
-
 //-----------------------------------------------------------------------
 //
 // Private methods
@@ -368,4 +355,22 @@ LinkedList::Node* LinkedList::merge(Node* pL, Node* pR) {
 	pNewEnd->pNext = (NULL == pL) ? pR : pL;
 	
 	return pNewList;
+}
+
+ErrorCodes LinkedList::deleteList() {
+	ErrorCodes ecRetCodes = ErrorCodes::SUCCESS;
+
+	// Check to see if there is anything to delete.
+	if (NULL == m_pHead) {
+		ecRetCodes = ErrorCodes::FAILURE;
+		return ecRetCodes;
+	}
+
+	while (NULL != m_pHead) {
+		Node* delNode = m_pHead;
+		m_pHead = m_pHead->pNext;
+		delNode->pNext = NULL;
+		delete delNode;
+	}
+	return ecRetCodes;
 }

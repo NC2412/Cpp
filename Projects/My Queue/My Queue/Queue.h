@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Util.h"
+using namespace std;
 
 class Queue
 {
 public:
 	struct Node {
-		int value;
+		int value = 0;
 		Node* pNext = NULL;
 	};
 

@@ -10,7 +10,7 @@ class BinaryTree
 
 		Node* pLeft = NULL;
 		Node* pRight = NULL;
-		Node* pNext = NULL;
+		//Node* pNext = NULL;
 	};
 
 public:
@@ -39,7 +39,7 @@ private:
 	ErrorCodes printInOrder(Node* pNode);
 	ErrorCodes printPreOrder(Node* pNode);
 	ErrorCodes printPostOrder(Node* pNode);
-	ErrorCodes printLevelOrder(Node* pNode);
+	ErrorCodes printLevelOrder();
 
 	ErrorCodes deleteList(Node* pNode);
 

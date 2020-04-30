@@ -1,5 +1,7 @@
 #include <iostream>
 #include "BinaryTree.h"
+#include "Queue.h"
+
 using namespace std;
 
 BinaryTree::BinaryTree() {
@@ -117,14 +119,13 @@ ErrorCodes BinaryTree::printTree(int iPrintType)
 			printPostOrder(m_pHead);
 			break;
 		case 4:
-			printLevelOrder(m_pHead);
+			printLevelOrder();
 			break;
 		default:
 			ecRetCode = ErrorCodes::FAILURE;
 			return ecRetCode;
 	}
 	
-
 	return ecRetCode;
 }
 
@@ -177,13 +178,42 @@ ErrorCodes BinaryTree::printPostOrder(Node* pNode) {
 	return ecRetCode;
 }
 
-ErrorCodes BinaryTree::printLevelOrder(Node* pNode) {
+//
+// printLevelOrder is an iterative method to print the tree in level order.
+//
+ErrorCodes BinaryTree::printLevelOrder() {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 
-	if (pNode->pNext)
-		printLevelOrder(pNode->pNext);
+	if (NULL == m_pHead)
+		return ecRetCode;
 
-	cout << pNode->value << endl;
+	Queue queue;
+	queue.enqueue(m_pHead->value);
+
+	int value = 0;
+	while (true) {
+		value = queue.dequeue();
+
+		if (value == INT_MIN)
+			break;
+		else
+			cout << value << ", " << flush;
+
+		// Navigating list until pNode->value == value
+		Node* pNode = m_pHead;
+		while (value != pNode->value) {
+			if (value < pNode->value)
+				pNode = pNode->pLeft;
+			else
+				pNode = pNode->pRight;
+		}
+
+		if (NULL != pNode && NULL != pNode->pLeft)
+			queue.enqueue(pNode->pLeft->value);
+
+		if (NULL != pNode && NULL != pNode->pRight)
+			queue.enqueue(pNode->pRight->value);
+	}
 
 	return ecRetCode;
 }

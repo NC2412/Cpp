@@ -6,7 +6,7 @@ using namespace std;
 int main() {
 	BinaryTree tree;
 
-	int addArray[] = { 10, 5, 3, 7, 9, 12, 14, 16, 20 };
+	int addArray[] = { 10, 5, 3, 7, 9, 12, 14, 16, 20, 11, 13, 15 };
 	for (int v : addArray) {
  		if (ErrorCodes::FAILURE == tree.insertNode(v)) {
 			return 1;
@@ -20,7 +20,7 @@ int main() {
 		3 - post-order
 		4 - level-order
 	*/
-	for (int i = 1; i <= 3; i++) {
+	for (int i = 1; i <= 4; i++) {
 		tree.printTree(i);
 		cout << endl;
 	}

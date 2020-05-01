@@ -65,15 +65,8 @@ ErrorCodes BinaryTree::deleteNode(int delValue) {
 	if (pDelNode->value == delValue) {
 		// Head Case
 		setToSuccessor(pDelNode, pCur, pPrev); // pCur = successor, pPrev = Node->pLeft = pCur
-		
 		deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
-		/*pPrev->pLeft = pCur->pRight;
-		pCur->pLeft = pDelNode->pLeft;
-		pCur->pRight = pDelNode->pRight;
-		delete pDelNode;*/
-		
 		m_pHead = pCur;
-
 		return ecRetCode;
 	}
 
@@ -82,81 +75,24 @@ ErrorCodes BinaryTree::deleteNode(int delValue) {
 			if (NULL != pDelNode->pLeft && NULL != pDelNode->pRight) {
 				// Two child case
 				setToSuccessor(pDelNode, pCur, pPrev); // pCur = successor, pPrev = Node-> pCur
-
 				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
-				/*if (pPrev != pDelNode)
-					pPrev->pLeft = pCur->pRight;
-				
-				if (pDelPrev->pLeft == pDelNode)
-					pDelPrev->pLeft = pCur;
-				else
-					pDelPrev->pRight = pCur;
-
-				if (pDelNode->pLeft == pCur)
-					pCur->pLeft = pCur->pLeft;
-				else
-					pCur->pLeft = pDelNode->pLeft;
-
-				if (pDelNode->pRight == pCur)
-					pCur->pRight = pCur->pRight;
-				else
-					pCur->pRight = pDelNode->pRight;
-
-				delete pDelNode;*/
-
 				return ecRetCode;
 			}
-
 			else if (NULL != pDelNode->pLeft && NULL == pDelNode->pRight) {
 				// Only left child case
 				setToPredecessor(pDelNode, pCur, pPrev); // pCur = predecessor, pPrev = Node->pRight = pCur
-
 				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
-				/*pPrev->pLeft = pCur->pRight;
-
-				if (pDelPrev->pLeft == pDelNode)
-					pDelPrev->pLeft = pCur;
-				else
-					pDelPrev->pRight = pCur;
-
-				if (pDelNode->pRight != pCur)
-					pCur->pRight = pDelNode->pRight;
-				if (pDelNode->pLeft != pCur)
-					pCur->pLeft = pDelNode->pLeft;
-
-				delete pDelNode;*/
 				return ecRetCode;
 			}
-
 			else if (NULL == pDelNode->pLeft && NULL != pDelNode->pRight) {
 				// Only right child case
 				setToSuccessor(pDelNode, pCur, pPrev);
-				
-				//deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
-				pPrev->pRight = pCur->pLeft;
-
-				if (pDelPrev->pLeft == pDelNode)
-					pDelPrev->pLeft = pCur;
-				else
-					pDelPrev->pRight = pCur;
-
-				pCur->pRight = pDelNode->pRight;
-				pCur->pLeft = pDelNode->pLeft;
-
-				delete pDelNode;
-
+				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
 				return ecRetCode;
 			}
 			else {
 				// Leaf node case
 				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
-				/*if (pDelPrev->pLeft == pDelNode)
-					pDelPrev->pLeft = NULL;
-				else
-					pDelPrev->pRight = NULL;
-
-				delete pDelNode;*/
-
 				return ecRetCode;
 			}
 		}

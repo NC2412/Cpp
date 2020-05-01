@@ -9,7 +9,7 @@ BinaryTree::BinaryTree() {
 }
 
 BinaryTree::~BinaryTree() {
-	deleteList(m_pHead);
+	deleteTree(m_pHead);
 }
 
 ErrorCodes BinaryTree::insertNode(int value) {
@@ -52,43 +52,120 @@ ErrorCodes BinaryTree::insertNode(int value) {
 
 ErrorCodes BinaryTree::deleteNode(int delValue) {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
-	Node* pCur = m_pHead;
+
+	
+	Node* pDelNode = m_pHead;	// delete node for placeholding the node to be deleted
+	Node* pDelPrev = NULL;		// delete previous node for placeholding the node to assign a new value
+	Node* pCur = m_pHead;		// pCur and pPrev for holding the place of the new node to replace the deleted node.
 	Node* pPrev = NULL;
 
-	if (NULL == pCur)
+	if (NULL == pDelNode || NULL == pCur)
 		return ecRetCode;
 
-	if (m_pHead->value == delValue) {
-		// Do a TON
+	if (pDelNode->value == delValue) {
+		// Head Case
+		setToSuccessor(pDelNode, pCur, pPrev); // pCur = successor, pPrev = Node->pLeft = pCur
+		
+		deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
+		/*pPrev->pLeft = pCur->pRight;
+		pCur->pLeft = pDelNode->pLeft;
+		pCur->pRight = pDelNode->pRight;
+		delete pDelNode;*/
+		
+		m_pHead = pCur;
+
+		return ecRetCode;
 	}
 
-	while (pCur) {
-		if (pCur->value == delValue) {
-			if (NULL == pCur->pLeft && NULL == pCur->pRight)
-				// Leaf case
-				delete pCur;
+	while (NULL != pDelNode) {
+		if (delValue == pDelNode->value) {
+			if (NULL != pDelNode->pLeft && NULL != pDelNode->pRight) {
+				// Two child case
+				setToSuccessor(pDelNode, pCur, pPrev); // pCur = successor, pPrev = Node-> pCur
 
-			if (NULL == pCur->pLeft) {
-				// Left child case
-				if (pPrev->pLeft == pCur) {
-					// pCur is left child
-					pPrev->pLeft = pCur->pLeft;
-				}
-				else {
-					// pCur is right child
-					pPrev->pRight = pCur->pLeft;
-				}
+				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
+				/*if (pPrev != pDelNode)
+					pPrev->pLeft = pCur->pRight;
+				
+				if (pDelPrev->pLeft == pDelNode)
+					pDelPrev->pLeft = pCur;
+				else
+					pDelPrev->pRight = pCur;
+
+				if (pDelNode->pLeft == pCur)
+					pCur->pLeft = pCur->pLeft;
+				else
+					pCur->pLeft = pDelNode->pLeft;
+
+				if (pDelNode->pRight == pCur)
+					pCur->pRight = pCur->pRight;
+				else
+					pCur->pRight = pDelNode->pRight;
+
+				delete pDelNode;*/
+
+				return ecRetCode;
 			}
-			else if (NULL == pCur->pRight) {
-				// Right child case
+
+			else if (NULL != pDelNode->pLeft && NULL == pDelNode->pRight) {
+				// Only left child case
+				setToPredecessor(pDelNode, pCur, pPrev); // pCur = predecessor, pPrev = Node->pRight = pCur
+
+				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
+				/*pPrev->pLeft = pCur->pRight;
+
+				if (pDelPrev->pLeft == pDelNode)
+					pDelPrev->pLeft = pCur;
+				else
+					pDelPrev->pRight = pCur;
+
+				if (pDelNode->pRight != pCur)
+					pCur->pRight = pDelNode->pRight;
+				if (pDelNode->pLeft != pCur)
+					pCur->pLeft = pDelNode->pLeft;
+
+				delete pDelNode;*/
+				return ecRetCode;
+			}
+
+			else if (NULL == pDelNode->pLeft && NULL != pDelNode->pRight) {
+				// Only right child case
+				setToSuccessor(pDelNode, pCur, pPrev);
+				
+				//deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
+				pPrev->pRight = pCur->pLeft;
+
+				if (pDelPrev->pLeft == pDelNode)
+					pDelPrev->pLeft = pCur;
+				else
+					pDelPrev->pRight = pCur;
+
+				pCur->pRight = pDelNode->pRight;
+				pCur->pLeft = pDelNode->pLeft;
+
+				delete pDelNode;
+
+				return ecRetCode;
+			}
+			else {
+				// Leaf node case
+				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
+				/*if (pDelPrev->pLeft == pDelNode)
+					pDelPrev->pLeft = NULL;
+				else
+					pDelPrev->pRight = NULL;
+
+				delete pDelNode;*/
+
+				return ecRetCode;
 			}
 		}
-		
-		pPrev = pCur;
-		if (delValue < pCur->value)
-			pCur = pCur->pLeft;
+
+		pDelPrev = pDelNode;
+		if (delValue < pDelNode->value)
+			pDelNode = pDelNode->pLeft;
 		else
-			pCur = pCur->pRight;
+			pDelNode = pDelNode->pRight;
 	}
 
 	return ecRetCode;
@@ -126,6 +203,85 @@ ErrorCodes BinaryTree::printTree(int iPrintType)
 			return ecRetCode;
 	}
 	
+	return ecRetCode;
+}
+
+//-----------------------------------------------------------------
+//
+// Private Helper Methods
+//
+//-----------------------------------------------------------------
+
+ErrorCodes BinaryTree::setToPredecessor(Node* rootNode, Node*& pCur, Node*& pPrev)
+{
+	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+
+	if (NULL == rootNode->pLeft)
+		return ecRetCode;
+	else { 
+		pCur = rootNode->pLeft; 
+		pPrev = rootNode; 
+	}
+
+	while (NULL != pCur->pRight) {
+		pPrev = pCur;
+		pCur = pCur->pRight;
+	}
+
+	return ecRetCode;
+}
+
+ErrorCodes BinaryTree::setToSuccessor(Node* rootNode, Node*& pCur, Node*& pPrev)
+{
+	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+
+	if (NULL == rootNode->pRight)
+		return ecRetCode;
+	else {
+		pPrev = rootNode;
+		pCur = rootNode->pRight;
+	}
+
+	while (NULL != pCur->pLeft) {
+		pPrev = pCur;
+		pCur = pCur->pLeft;
+	}
+
+	return ecRetCode;
+}
+
+ErrorCodes BinaryTree::deleteGivenNode(Node*& pDelNode, Node*& pDelPrev, Node*& pCur, Node*& pPrev) {
+	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+
+	if (NULL != pDelNode->pLeft || NULL != pDelNode->pRight) {
+		if (NULL != pPrev && pPrev != pDelNode) {
+			if (pPrev->pLeft == pCur)
+				pPrev->pLeft = pCur->pRight;
+			else
+				pPrev->pRight = pCur->pLeft;
+		}
+
+		if (NULL != pDelPrev && pCur != m_pHead) {
+			if (pDelPrev->pLeft == pDelNode)
+				pDelPrev->pLeft = pCur;
+			else
+				pDelPrev->pRight = pCur;
+		}
+
+		if (pDelNode->pRight != pCur)
+			pCur->pRight = pDelNode->pRight;
+		if (pDelNode->pLeft != pCur)
+			pCur->pLeft = pDelNode->pLeft;
+	}
+	else {
+		if (pDelPrev->pLeft == pDelNode)
+			pDelPrev->pLeft = NULL;
+		if (pDelPrev->pRight == pDelNode)
+			pDelPrev->pRight = NULL;
+	}
+
+	delete pDelNode;
+
 	return ecRetCode;
 }
 
@@ -221,17 +377,17 @@ ErrorCodes BinaryTree::printLevelOrder() {
 //
 // deleteList will take a node as a parameter
 // deleteList is a recursive method using post-order to delete the nodes, so we don't have to do any rebalancing.
-ErrorCodes BinaryTree::deleteList(Node* pNode) {
+ErrorCodes BinaryTree::deleteTree(Node* pNode) {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 
 	if (NULL == pNode)
 		return ecRetCode;
 
 	if (pNode->pLeft)
-		deleteList(pNode->pLeft);
+		deleteTree(pNode->pLeft);
 
 	if (pNode->pRight)
-		deleteList(pNode->pRight);
+		deleteTree(pNode->pRight);
 
 	delete pNode;
 

@@ -36,12 +36,17 @@ public:
 	//  - left right next
 
 private:
+	// Private helper methods
+	ErrorCodes setToPredecessor(Node* rootNode, Node*& pCur, Node*& pPrev);
+	ErrorCodes setToSuccessor(Node* rootNode, Node*& pCur, Node*& pPrev);
+	ErrorCodes deleteGivenNode(Node*& pDelNode, Node*& pDelPrev, Node*& pCur, Node*& pPrev);
+
+	// Private operating methods
 	ErrorCodes printInOrder(Node* pNode);
 	ErrorCodes printPreOrder(Node* pNode);
 	ErrorCodes printPostOrder(Node* pNode);
 	ErrorCodes printLevelOrder();
-
-	ErrorCodes deleteList(Node* pNode);
+	ErrorCodes deleteTree(Node* pNode);
 
 private:
 	// Member variables

@@ -10,7 +10,8 @@ Queue::~Queue() {
 	deleteQueue();
 }
 
-ErrorCodes Queue::enqueue(int value)
+template <typename T>
+ErrorCodes Queue::enqueue(T value)
 {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 	Node* newNode = new Node;
@@ -33,12 +34,13 @@ ErrorCodes Queue::enqueue(int value)
 // 
 // How will i return a NULL value?
 //
-int Queue::dequeue()
+template <typename T>
+T Queue::dequeue()
 {
 	int value = m_pHead->value;
 	Node* temp = m_pHead;
 
-	if (NULL == m_pHead) {
+	if (isEmpty()) {
 		return INT_MIN;
 	}
 
@@ -56,7 +58,7 @@ ErrorCodes Queue::deleteQueue() {
 		return ecRetCode;
 
 	while (NULL != m_pHead) {
-		Node* tempNode = m_pHead;
+		Node<int>* tempNode = m_pHead;
 		m_pHead = m_pHead->pNext;
 		tempNode->pNext = NULL;
 		delete tempNode;

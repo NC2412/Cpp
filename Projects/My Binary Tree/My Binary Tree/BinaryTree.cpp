@@ -142,13 +142,28 @@ ErrorCodes BinaryTree::printTree(int iPrintType)
 	return ecRetCode;
 }
 
+bool BinaryTree::hasValue(int value) {
+	Node* pCur = m_pHead;
+
+	while (NULL != pCur) {
+		if (pCur->value = value)
+			return true;
+		else if (value < pCur->value)
+			pCur = pCur->pLeft;
+		else
+			pCur = pCur->pRight;
+	}
+
+	return false;
+}
+
 //-----------------------------------------------------------------
 //
 // Private Helper Methods
 //
 //-----------------------------------------------------------------
 
-ErrorCodes BinaryTree::setToPredecessor(Node* rootNode, Node*& pCur, Node*& pPrev)
+ErrorCodes BinaryTree::setToPredecessor(Node* rootNode, Node* pCur, Node* pPrev)
 {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 
@@ -167,7 +182,7 @@ ErrorCodes BinaryTree::setToPredecessor(Node* rootNode, Node*& pCur, Node*& pPre
 	return ecRetCode;
 }
 
-ErrorCodes BinaryTree::setToSuccessor(Node* rootNode, Node*& pCur, Node*& pPrev)
+ErrorCodes BinaryTree::setToSuccessor(Node* rootNode, Node* pCur, Node* pPrev)
 {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 
@@ -186,7 +201,7 @@ ErrorCodes BinaryTree::setToSuccessor(Node* rootNode, Node*& pCur, Node*& pPrev)
 	return ecRetCode;
 }
 
-ErrorCodes BinaryTree::deleteGivenNode(Node*& pDelNode, Node*& pDelPrev, Node*& pCur, Node*& pPrev) {
+ErrorCodes BinaryTree::deleteGivenNode(Node* pDelNode, Node* pDelPrev, Node* pCur, Node* pPrev) {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 
 	if (NULL != pDelNode->pLeft || NULL != pDelNode->pRight) {
@@ -279,33 +294,47 @@ ErrorCodes BinaryTree::printLevelOrder() {
 	if (NULL == m_pHead)
 		return ecRetCode;
 
-	Queue queue;
-	queue.enqueue(m_pHead->value);
+	Node* pCur;
+	Queue q;
 
-	int value = 0;
-	while (true) {
-		value = queue.dequeue();
-
-		if (value == INT_MIN)
-			break;
-		else
-			cout << value << ", " << flush;
-
-		// Navigating list until pNode->value == value
-		Node* pNode = m_pHead;
-		while (value != pNode->value) {
-			if (value < pNode->value)
-				pNode = pNode->pLeft;
-			else
-				pNode = pNode->pRight;
-		}
-
-		if (NULL != pNode && NULL != pNode->pLeft)
-			queue.enqueue(pNode->pLeft->value);
-
-		if (NULL != pNode && NULL != pNode->pRight)
-			queue.enqueue(pNode->pRight->value);
+	try {
+		//pCur = q.dequeue();
 	}
+	catch (int e) {
+		cout << "Exception caught: " << e << ", empty queue." << endl;
+	}
+
+	// while (!queue.isEmpty()) 
+	//while (!queue.isEmpty()) {
+	//	value = queue.dequeue();
+
+	//	if (value == INT_MIN)
+	//		break;
+	//	else
+	//		cout << value << ", " << flush;
+
+	//	// Navigating list until pNode->value == value
+	//	Node* pNode = m_pHead;
+	//	while (value != pNode->value) {
+	//		if (value < pNode->value)
+	//			pNode = pNode->pLeft;
+	//		else
+	//			pNode = pNode->pRight;
+	//	}
+
+	//	/*
+	//		pCur = queue.dequeue();
+	//		cout << pCur->value << ", " << flush;
+
+	//		if statements below
+	//	*/
+
+	//	if (NULL != pNode && NULL != pNode->pLeft)
+	//		queue.enqueue(pNode->pLeft->value);
+
+	//	if (NULL != pNode && NULL != pNode->pRight)
+	//		queue.enqueue(pNode->pRight->value);
+	//}
 
 	return ecRetCode;
 }

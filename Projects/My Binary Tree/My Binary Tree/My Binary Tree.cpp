@@ -1,6 +1,7 @@
 #include <iostream>
 #include "BinaryTree.h"
 #include "Util.h"
+#include "Queue.h"
 using namespace std;
 
 int main() {
@@ -32,7 +33,7 @@ int main() {
 		RIGHT CHILD: 7
 		2 CHILD: 5, 12, 14
 	*/
-	tree.deleteNode(12);
+	tree.deleteNode(7);
 
 	for (int i = 1; i <= 4; i++) {
 		tree.printTree(i);

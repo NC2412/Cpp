@@ -149,7 +149,6 @@
   <ItemGroup>
     <ClCompile Include="BinaryTree.cpp" />
     <ClCompile Include="My Binary Tree.cpp" />
-    <ClCompile Include="Queue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\My Queue\My Queue\Queue.h" />

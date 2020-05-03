@@ -21,11 +21,10 @@ public:
 	// Operating methods
 	ErrorCodes insertNode(int value);
 	ErrorCodes deleteNode(int delValue);
+	ErrorCodes printTree(int iPrintType);
+	bool hasValue(int value);
 
 	// TODO
-	// - implement in order, post order, pre order, level order.
-	ErrorCodes printTree(int iPrintType);
-	// use a queue to iteratively print level order
 	// use delete node as recursive
 	//		- use helper methods
 	// 
@@ -37,9 +36,9 @@ public:
 
 private:
 	// Private helper methods
-	ErrorCodes setToPredecessor(Node* rootNode, Node*& pCur, Node*& pPrev);
-	ErrorCodes setToSuccessor(Node* rootNode, Node*& pCur, Node*& pPrev);
-	ErrorCodes deleteGivenNode(Node*& pDelNode, Node*& pDelPrev, Node*& pCur, Node*& pPrev);
+	ErrorCodes setToPredecessor(Node* rootNode, Node* pCur, Node* pPrev);
+	ErrorCodes setToSuccessor(Node* rootNode, Node* pCur, Node* pPrev);
+	ErrorCodes deleteGivenNode(Node* pDelNode, Node* pDelPrev, Node* pCur, Node* pPrev);
 
 	// Private operating methods
 	ErrorCodes printInOrder(Node* pNode);

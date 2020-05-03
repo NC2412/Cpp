@@ -14,7 +14,7 @@ public:
 
 public:
 	// CTOR and DTOR
-	Queue();
+	Queue<T>();
 	~Queue();
 
 	// Operating methods
@@ -71,12 +71,11 @@ ErrorCodes Queue<T>::enqueue(T value)
 template <typename T>
 T Queue<T>::dequeue()
 {
+	if (NULL == m_pHead)
+		throw -1;
+
 	int value = m_pHead->value;
 	Node* temp = m_pHead;
-
-	if (isEmpty()) {
-		return INT_MIN;
-	}
 
 	m_pHead = m_pHead->pNext;
 	temp->pNext = NULL;

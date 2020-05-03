@@ -3,10 +3,10 @@
 #include "Util.h"
 using namespace std;
 
+template <class T>
 class Queue
 {
 public:
-	template <class T>
 	struct Node {
 		T value;
 		Node* pNext = NULL;
@@ -18,9 +18,7 @@ public:
 	~Queue();
 
 	// Operating methods
-	template <typename T>
 	ErrorCodes enqueue(T value);
-	template <typename T>
 	T dequeue();
 
 	// Getter methods
@@ -31,6 +29,6 @@ private:
 	ErrorCodes deleteQueue();
 
 private:
-	Node<int>* m_pHead;
-	Node<int>* m_pTail;
+	Node* m_pHead;
+	Node* m_pTail;
 };

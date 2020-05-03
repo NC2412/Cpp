@@ -1,17 +1,19 @@
 #include <limits>
 #include "Queue.h"
 
-Queue::Queue() {
+template <class T>
+Queue<T>::Queue() {
 	m_pHead = NULL;
 	m_pTail = NULL;
 }
 
-Queue::~Queue() {
+template <class T>
+Queue<T>::~Queue() {
 	deleteQueue();
 }
 
 template <typename T>
-ErrorCodes Queue::enqueue(T value)
+ErrorCodes Queue<T>::enqueue(T value)
 {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 	Node* newNode = new Node;
@@ -35,7 +37,7 @@ ErrorCodes Queue::enqueue(T value)
 // How will i return a NULL value?
 //
 template <typename T>
-T Queue::dequeue()
+T Queue<T>::dequeue()
 {
 	int value = m_pHead->value;
 	Node* temp = m_pHead;
@@ -51,14 +53,15 @@ T Queue::dequeue()
 	return value;
 }
 
-ErrorCodes Queue::deleteQueue() {
+template <class T>
+ErrorCodes Queue<T>::deleteQueue() {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 
 	if (NULL == m_pHead)
 		return ecRetCode;
 
 	while (NULL != m_pHead) {
-		Node<int>* tempNode = m_pHead;
+		Node* tempNode = m_pHead;
 		m_pHead = m_pHead->pNext;
 		tempNode->pNext = NULL;
 		delete tempNode;

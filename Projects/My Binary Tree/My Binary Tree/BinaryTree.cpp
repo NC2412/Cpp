@@ -295,46 +295,24 @@ ErrorCodes BinaryTree::printLevelOrder() {
 		return ecRetCode;
 
 	Node* pCur;
-	Queue q;
+	Queue<Node*> q;
+	q.enqueue(m_pHead);
 
-	try {
-		//pCur = q.dequeue();
+	while (!q.isEmpty()) {
+		try {
+			pCur = q.dequeue();
+			cout << pCur->value << ", " << flush;
+		}
+		catch (int e) {
+			cout << "Exception caught: " << e << ", empty queue." << endl;
+			return ecRetCode;
+		}
+
+		if (pCur->pLeft)
+			q.enqueue(pCur->pLeft);
+		if (pCur->pRight)
+			q.enqueue(pCur->pRight);
 	}
-	catch (int e) {
-		cout << "Exception caught: " << e << ", empty queue." << endl;
-	}
-
-	// while (!queue.isEmpty()) 
-	//while (!queue.isEmpty()) {
-	//	value = queue.dequeue();
-
-	//	if (value == INT_MIN)
-	//		break;
-	//	else
-	//		cout << value << ", " << flush;
-
-	//	// Navigating list until pNode->value == value
-	//	Node* pNode = m_pHead;
-	//	while (value != pNode->value) {
-	//		if (value < pNode->value)
-	//			pNode = pNode->pLeft;
-	//		else
-	//			pNode = pNode->pRight;
-	//	}
-
-	//	/*
-	//		pCur = queue.dequeue();
-	//		cout << pCur->value << ", " << flush;
-
-	//		if statements below
-	//	*/
-
-	//	if (NULL != pNode && NULL != pNode->pLeft)
-	//		queue.enqueue(pNode->pLeft->value);
-
-	//	if (NULL != pNode && NULL != pNode->pRight)
-	//		queue.enqueue(pNode->pRight->value);
-	//}
 
 	return ecRetCode;
 }

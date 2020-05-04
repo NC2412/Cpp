@@ -33,7 +33,7 @@ int main() {
 		RIGHT CHILD: 7
 		2 CHILD: 5, 12, 14
 	*/
-	tree.deleteNode(7);
+	//tree.deleteNode(7);
 
 	for (int i = 1; i <= 4; i++) {
 		tree.printTree(i);

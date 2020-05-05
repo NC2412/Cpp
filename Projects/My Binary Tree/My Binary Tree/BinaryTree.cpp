@@ -4,14 +4,6 @@
 
 using namespace std;
 
-BinaryTree::BinaryTree() {
-	m_pHead = NULL;
-}
-
-BinaryTree::~BinaryTree() {
-	deleteTree(m_pHead);
-}
-
 ErrorCodes BinaryTree::insertNode(int value) {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 	Node* pCur = NULL;
@@ -45,6 +37,12 @@ ErrorCodes BinaryTree::insertNode(int value) {
 		else {
 			return ecRetCode;
 		}
+	}
+
+	if (m_fIsAVL == true) {
+		// Helper methods for AVL:
+		// balanceTree, findHeight, rotateLeft, rotateRight
+		m_pHead = balanceTree(m_pHead);
 	}
 
 	return ecRetCode;
@@ -107,6 +105,51 @@ ErrorCodes BinaryTree::deleteNode(int delValue) {
 	return ecRetCode;
 }
 
+//
+// METHOD: sortList
+//
+// - sortList will follow a postorder method to compare the heights of the 
+//
+BinaryTree::Node* BinaryTree::balanceTree(Node* pRoot) {
+
+	if (pRoot->pLeft)
+		pRoot->pLeft = balanceTree(pRoot->pLeft);
+
+	if (pRoot->pRight)
+		pRoot->pRight = balanceTree(pRoot->pRight);
+
+	// Left - right heights of the tree. if iHDiff is -, right side has greater height, if iHDiff is +, left side has greater height.
+	int iHDiff = findHeight(pRoot->pLeft) - findHeight(pRoot->pRight);
+
+	// Becuase the difference is greater than one, there MUST be at least two nodes on one of the sides of the tree
+	if  (1 < iHDiff && NULL != pRoot->pLeft) {
+		// Left Right Case
+		if (NULL != pRoot->pLeft->pRight) { //&& (pRoot->pLeft->pRight->pLeft || pRoot->pLeft->pRight->pRight)) {
+			pRoot->pLeft = rotateLeft(pRoot->pLeft);
+			pRoot = rotateRight(pRoot);
+		}
+		else {
+			// Left Left Case
+			pRoot = rotateRight(pRoot);
+		}
+	}
+	else if (-1 > iHDiff && NULL != pRoot->pRight) {
+		if (NULL != pRoot->pRight->pLeft) { //&& (pRoot->pRight->pLeft->pLeft || pRoot->pRight->pLeft->pRight)) {
+			// Right Left Case
+			pRoot->pRight = rotateRight(pRoot->pRight);
+			pRoot = rotateLeft(pRoot);
+		}
+		else {
+			// Right Right Case
+			pRoot = rotateLeft(pRoot);
+		}
+		
+	}
+	else {
+		return pRoot;
+	}
+}
+
 /*
 	iPrintType values:
 	1 - in-order
@@ -123,15 +166,19 @@ ErrorCodes BinaryTree::printTree(int iPrintType)
 
 	switch (iPrintType) {
 		case 1:
+			cout << "In-order: " << flush;
 			printInOrder(m_pHead);
 			break;
 		case 2:
+			cout << "Pre-order: " << flush;
 			printPreOrder(m_pHead);
 			break;
 		case 3:
+			cout << "Post-order: " << flush;
 			printPostOrder(m_pHead);
 			break;
 		case 4:
+			cout << "Level-order: " << flush;
 			printLevelOrder();
 			break;
 		default:
@@ -234,6 +281,38 @@ ErrorCodes BinaryTree::deleteGivenNode(Node* pDelNode, Node* pDelPrev, Node* pCu
 	delete pDelNode;
 
 	return ecRetCode;
+}
+
+int BinaryTree::findHeight(Node* pNode) {
+	if (NULL == pNode)
+		return 0; 
+
+	if (NULL == pNode->pLeft && NULL == pNode->pRight) {
+		return 1;
+	}
+	else if (pNode->pLeft && pNode->pRight) {
+		int iLHeight = ( findHeight(pNode->pLeft) + 1 );
+		int iRHeight = ( findHeight(pNode->pRight) + 1 );
+		return (iLHeight > iRHeight) ? iLHeight : iRHeight;
+	}
+	else if (pNode->pLeft && NULL == pNode->pRight)
+		return ( findHeight(pNode->pLeft) + 1 );
+	else
+		return ( findHeight(pNode->pRight) + 1 );
+}
+
+BinaryTree::Node* BinaryTree::rotateLeft(Node* pCur) {
+	Node* pNext = pCur->pRight;
+	pCur->pRight = pNext->pLeft;
+	pNext->pLeft = pCur;
+	return pNext;
+}
+
+BinaryTree::Node* BinaryTree::rotateRight(Node* pCur) {
+	Node* pNext = pCur->pLeft;
+	pCur->pLeft = pNext->pRight;
+	pNext->pRight = pCur;
+	return pNext;
 }
 
 //-----------------------------------------------------------------

@@ -15,8 +15,9 @@ class BinaryTree
 
 public:
 	// CTORs and DTORs
-	BinaryTree();
-	~BinaryTree();
+	BinaryTree() : m_pHead(NULL), m_fIsAVL(false) {};
+	BinaryTree(bool avl) : m_pHead(NULL), m_fIsAVL(avl) {};
+	~BinaryTree() { deleteTree(m_pHead); }
 
 	// Operating methods
 	ErrorCodes insertNode(int value);
@@ -39,8 +40,13 @@ private:
 	ErrorCodes setToPredecessor(Node* rootNode, Node* pCur, Node* pPrev);
 	ErrorCodes setToSuccessor(Node* rootNode, Node* pCur, Node* pPrev);
 	ErrorCodes deleteGivenNode(Node* pDelNode, Node* pDelPrev, Node* pCur, Node* pPrev);
+	int findHeight(Node*);
+
+	Node* rotateLeft(Node*);
+	Node* rotateRight(Node*);
 
 	// Private operating methods
+	Node* balanceTree(Node*);
 	ErrorCodes printInOrder(Node* pNode);
 	ErrorCodes printPreOrder(Node* pNode);
 	ErrorCodes printPostOrder(Node* pNode);
@@ -50,5 +56,6 @@ private:
 private:
 	// Member variables
 	Node* m_pHead;
+	bool m_fIsAVL;
 };
 

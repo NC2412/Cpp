@@ -5,9 +5,9 @@
 using namespace std;
 
 int main() {
-	BinaryTree tree;
+	BinaryTree tree(true);
 
-	int addArray[] = { 10, 5, 3, 7, 9, 12, 14, 16, 11, 13, 15 };
+	int addArray[] = { 10, 13, 19, 15, 14, 16 };
 	for (int v : addArray) {
  		if (ErrorCodes::FAILURE == tree.insertNode(v)) {
 			return 1;
@@ -35,10 +35,10 @@ int main() {
 	*/
 	//tree.deleteNode(7);
 
-	for (int i = 1; i <= 4; i++) {
-		tree.printTree(i);
-		cout << endl;
-	}
+	//for (int i = 1; i <= 4; i++) {
+	//	tree.printTree(i);
+	//	cout << endl;
+	//}
 
 	return 0;
 }

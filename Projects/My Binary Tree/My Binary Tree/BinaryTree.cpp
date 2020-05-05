@@ -108,7 +108,8 @@ ErrorCodes BinaryTree::deleteNode(int delValue) {
 //
 // METHOD: sortList
 //
-// - sortList will follow a postorder method to compare the heights of the 
+// - balanceTree will follow a postorder method to compare the heights of the 
+// - balanceTree will use helper methods: findHeight, rotateLeft, rotateRight
 //
 BinaryTree::Node* BinaryTree::balanceTree(Node* pRoot) {
 
@@ -124,7 +125,7 @@ BinaryTree::Node* BinaryTree::balanceTree(Node* pRoot) {
 	// Becuase the difference is greater than one, there MUST be at least two nodes on one of the sides of the tree
 	if  (1 < iHDiff && NULL != pRoot->pLeft) {
 		// Left Right Case
-		if (NULL != pRoot->pLeft->pRight) { //&& (pRoot->pLeft->pRight->pLeft || pRoot->pLeft->pRight->pRight)) {
+		if (NULL != pRoot->pLeft->pRight && (pRoot->pLeft->pRight->pLeft || pRoot->pLeft->pRight->pRight)) {
 			pRoot->pLeft = rotateLeft(pRoot->pLeft);
 			pRoot = rotateRight(pRoot);
 		}
@@ -134,7 +135,7 @@ BinaryTree::Node* BinaryTree::balanceTree(Node* pRoot) {
 		}
 	}
 	else if (-1 > iHDiff && NULL != pRoot->pRight) {
-		if (NULL != pRoot->pRight->pLeft) { //&& (pRoot->pRight->pLeft->pLeft || pRoot->pRight->pLeft->pRight)) {
+		if (NULL != pRoot->pRight->pLeft && (pRoot->pRight->pLeft->pLeft || pRoot->pRight->pLeft->pRight)) {
 			// Right Left Case
 			pRoot->pRight = rotateRight(pRoot->pRight);
 			pRoot = rotateLeft(pRoot);
@@ -313,6 +314,27 @@ BinaryTree::Node* BinaryTree::rotateRight(Node* pCur) {
 	pCur->pLeft = pNext->pRight;
 	pNext->pRight = pCur;
 	return pNext;
+}
+
+//-----------------------------------------------------------------
+//
+// Mutator Methods
+//
+//-----------------------------------------------------------------
+void BinaryTree::toggleAVL() {
+	cout << findHeight(m_pHead) << endl;
+
+	if (m_fIsAVL == false) {
+		m_fIsAVL = true;
+
+		Node* newHead = balanceTree(m_pHead);
+		do {
+			m_pHead = newHead;
+			newHead = balanceTree(m_pHead);
+		} while (m_pHead != newHead);
+	}
+	else 
+		m_fIsAVL = false;
 }
 
 //-----------------------------------------------------------------

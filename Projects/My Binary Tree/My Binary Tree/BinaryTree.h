@@ -5,6 +5,7 @@ using namespace std;
 
 class BinaryTree
 {
+private:
 	struct Node {
 		int value = -1;
 
@@ -17,13 +18,17 @@ public:
 	// CTORs and DTORs
 	BinaryTree() : m_pHead(NULL), m_fIsAVL(false) {};
 	BinaryTree(bool avl) : m_pHead(NULL), m_fIsAVL(avl) {};
-	~BinaryTree() { deleteTree(m_pHead); }
+	// DELETE COUT WHEN DONE WITH TESTING
+	~BinaryTree() { cout << findHeight(m_pHead) << endl; deleteTree(m_pHead); }
 
 	// Operating methods
 	ErrorCodes insertNode(int value);
 	ErrorCodes deleteNode(int delValue);
 	ErrorCodes printTree(int iPrintType);
 	bool hasValue(int value);
+
+	// Mutator methods
+	void toggleAVL();
 
 	// TODO
 	// use delete node as recursive
@@ -41,7 +46,6 @@ private:
 	ErrorCodes setToSuccessor(Node* rootNode, Node* pCur, Node* pPrev);
 	ErrorCodes deleteGivenNode(Node* pDelNode, Node* pDelPrev, Node* pCur, Node* pPrev);
 	int findHeight(Node*);
-
 	Node* rotateLeft(Node*);
 	Node* rotateRight(Node*);
 

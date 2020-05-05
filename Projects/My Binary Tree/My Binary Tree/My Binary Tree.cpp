@@ -1,15 +1,19 @@
 #include <iostream>
+#include <stdlib.h>
 #include "BinaryTree.h"
 #include "Util.h"
 #include "Queue.h"
 using namespace std;
 
 int main() {
-	BinaryTree tree(true);
+	BinaryTree tree(false);
 
-	int addArray[] = { 10, 13, 19, 15, 14, 16 };
-	for (int v : addArray) {
- 		if (ErrorCodes::FAILURE == tree.insertNode(v)) {
+	int addArray[] = { 10, 15, 20, 25, 30, 35, 40, 45, 50};
+	int addNum = 0;
+
+	for (int addNum : addArray) {
+		//addNum = rand() % 100;
+ 		if (ErrorCodes::FAILURE == tree.insertNode(addNum)) {
 			return 1;
 		}
 	}
@@ -26,6 +30,8 @@ int main() {
 		cout << endl;
 	}
 
+	tree.toggleAVL();
+
 	/*
 		ROOT: 10
 		LEAF: 3, 9, 11, 13, 15
@@ -35,10 +41,10 @@ int main() {
 	*/
 	//tree.deleteNode(7);
 
-	//for (int i = 1; i <= 4; i++) {
-	//	tree.printTree(i);
-	//	cout << endl;
-	//}
+	for (int i = 1; i <= 4; i++) {
+		tree.printTree(i);
+		cout << endl;
+	}
 
 	return 0;
 }

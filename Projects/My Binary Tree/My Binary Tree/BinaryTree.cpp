@@ -179,7 +179,7 @@ ErrorCodes BinaryTree::printTree(int iPrintType)
 			printPostOrder(m_pHead);
 			break;
 		case 4:
-			cout << "Level-order: " << flush;
+			cout << "Level-order: " << endl << flush;
 			printLevelOrder();
 			break;
 		default:
@@ -402,13 +402,23 @@ ErrorCodes BinaryTree::printLevelOrder() {
 	while (!q.isEmpty()) {
 		try {
 			pCur = q.dequeue();
-			cout << pCur->value << ", " << flush;
+			if (NULL == pCur) {
+				cout << endl;
+				continue;
+			}
+			else
+				cout << pCur->value << ", " << flush;
 		}
 		catch (int e) {
 			cout << "Exception caught: " << e << ", empty queue." << endl;
 			return ecRetCode;
 		}
 
+		if (q.isEmpty()) {
+			// Creating sentinel
+			Node* sentinel = NULL;
+			q.enqueue(sentinel);
+		}
 		if (pCur->pLeft)
 			q.enqueue(pCur->pLeft);
 		if (pCur->pRight)

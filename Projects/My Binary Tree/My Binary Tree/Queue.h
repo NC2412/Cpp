@@ -8,7 +8,7 @@ class Queue
 {
 public:
 	struct Node {
-		T value;
+		T value = NULL;
 		Node* pNext = NULL;
 	};
 

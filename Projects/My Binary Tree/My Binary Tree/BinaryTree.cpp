@@ -42,7 +42,7 @@ ErrorCodes BinaryTree::insertNode(int value) {
 	if (m_fIsAVL == true) {
 		// Helper methods for AVL:
 		// balanceTree, findHeight, rotateLeft, rotateRight
-		m_pHead = balanceTree(m_pHead);
+		m_pHead = balanceSubTree(m_pHead);
 	}
 
 	return ecRetCode;
@@ -50,74 +50,68 @@ ErrorCodes BinaryTree::insertNode(int value) {
 
 ErrorCodes BinaryTree::deleteNode(int delValue) {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+	Node* pDelNode = m_pHead;
+	Node* pDelPrev = NULL;
+	Node* pReplNode = NULL;
 
-	
-	Node* pDelNode = m_pHead;	// delete node for placeholding the node to be deleted
-	Node* pDelPrev = NULL;		// delete previous node for placeholding the node to assign a new value
-	Node* pCur = m_pHead;		// pCur and pPrev for holding the place of the new node to replace the deleted node.
-	Node* pPrev = NULL;
-
-	if (NULL == pDelNode || NULL == pCur)
-		return ecRetCode;
-
-	if (pDelNode->value == delValue) {
-		// Head Case
-		setToSuccessor(pDelNode, pCur, pPrev); // pCur = successor, pPrev = Node->pLeft = pCur
-		deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
-		m_pHead = pCur;
-		return ecRetCode;
-	}
-
-	while (NULL != pDelNode) {
-		if (delValue == pDelNode->value) {
-			if (NULL != pDelNode->pLeft && NULL != pDelNode->pRight) {
-				// Two child case
-				setToSuccessor(pDelNode, pCur, pPrev); // pCur = successor, pPrev = Node-> pCur
-				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
-				return ecRetCode;
-			}
-			else if (NULL != pDelNode->pLeft && NULL == pDelNode->pRight) {
-				// Only left child case
-				setToPredecessor(pDelNode, pCur, pPrev); // pCur = predecessor, pPrev = Node->pRight = pCur
-				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
-				return ecRetCode;
-			}
-			else if (NULL == pDelNode->pLeft && NULL != pDelNode->pRight) {
-				// Only right child case
-				setToSuccessor(pDelNode, pCur, pPrev);
-				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
-				return ecRetCode;
-			}
-			else {
-				// Leaf node case
-				deleteGivenNode(pDelNode, pDelPrev, pCur, pPrev);
-				return ecRetCode;
-			}
-		}
-
+	while (pDelNode->value != delValue) {
 		pDelPrev = pDelNode;
+
 		if (delValue < pDelNode->value)
 			pDelNode = pDelNode->pLeft;
 		else
 			pDelNode = pDelNode->pRight;
 	}
 
+	if (pDelNode->pLeft && pDelNode->pRight) {
+		// TWO CHILD CASE
+		pReplNode = getSuccessor(pDelNode);
+		
+		if (m_pHead == pDelNode)
+			m_pHead = pReplNode;
+	}
+	else if (NULL == pDelNode->pRight && pDelNode->pLeft) {
+		// LEFT CHILD CASE
+		pReplNode = getPredecessor(pDelNode);
+	}
+	else if (NULL == pDelNode->pLeft && pDelNode->pRight) {
+		// RIGHT CHILD CASE
+		pReplNode = getSuccessor(pDelNode);
+	}
+
+	ecRetCode = handleNodeDelete(pDelNode, pDelPrev, pReplNode);
+
+	if (m_fIsAVL == true)
+		balanceTree();
+
+	return ecRetCode;
+}
+
+ErrorCodes BinaryTree::balanceTree() {
+	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+	
+	Node* newHead = balanceSubTree(m_pHead);
+	do {
+		m_pHead = newHead;
+		newHead = balanceSubTree(m_pHead);
+	} while (m_pHead != newHead);
+
 	return ecRetCode;
 }
 
 //
-// METHOD: sortList
+// METHOD: balanceSubTree
 //
 // - balanceTree will follow a postorder method to compare the heights of the 
 // - balanceTree will use helper methods: findHeight, rotateLeft, rotateRight
 //
-BinaryTree::Node* BinaryTree::balanceTree(Node* pRoot) {
+BinaryTree::Node* BinaryTree::balanceSubTree(Node* pRoot) {
 
 	if (pRoot->pLeft)
-		pRoot->pLeft = balanceTree(pRoot->pLeft);
+		pRoot->pLeft = balanceSubTree(pRoot->pLeft);
 
 	if (pRoot->pRight)
-		pRoot->pRight = balanceTree(pRoot->pRight);
+		pRoot->pRight = balanceSubTree(pRoot->pRight);
 
 	// Left - right heights of the tree. if iHDiff is -, right side has greater height, if iHDiff is +, left side has greater height.
 	int iHDiff = findHeight(pRoot->pLeft) - findHeight(pRoot->pRight);
@@ -149,6 +143,9 @@ BinaryTree::Node* BinaryTree::balanceTree(Node* pRoot) {
 	else {
 		return pRoot;
 	}
+
+	// THIS LINE MAY CAUSE A BUG, KEEP THAT IN MIND, TEST CASES!!!!!!!!!!!!!!!!!!!!!
+	return pRoot;
 }
 
 /*
@@ -211,34 +208,61 @@ bool BinaryTree::hasValue(int value) {
 //
 //-----------------------------------------------------------------
 
-ErrorCodes BinaryTree::setToPredecessor(Node* rootNode, Node* pCur, Node* pPrev)
-{
-	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+//-----------------------------------------------------------------
+//
+// Private Getter Methods
+//
+//-----------------------------------------------------------------
 
-	if (NULL == rootNode->pLeft)
-		return ecRetCode;
-	else { 
-		pCur = rootNode->pLeft; 
-		pPrev = rootNode; 
+// getPredecessor/getSuccessor will break off the wanted node and handle the reconstruction of the subtree.
+// Both methods return the needed node.
+BinaryTree::Node* BinaryTree::getPredecessor(Node* pRootNode) {
+	Node* pCur = pRootNode;
+	Node* pPrev = NULL;
+
+	if (NULL == pCur)
+		return pCur;
+
+	if (pCur->pLeft) {
+		pPrev = pCur;
+		pCur = pCur->pLeft;
+	}
+	else
+		return pCur;
+
+	if (NULL == pCur->pRight) {
+		pPrev->pLeft = pCur->pLeft;
+		return pCur;
 	}
 
 	while (NULL != pCur->pRight) {
 		pPrev = pCur;
-		pCur = pCur->pRight;
+		pCur = pCur->pLeft;
 	}
 
-	return ecRetCode;
+	pPrev->pRight = pCur->pLeft;
+	pCur->pLeft = NULL;
+
+	return pCur;
 }
 
-ErrorCodes BinaryTree::setToSuccessor(Node* rootNode, Node* pCur, Node* pPrev)
-{
-	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+BinaryTree::Node* BinaryTree::getSuccessor(Node* pRootNode) {
+	Node* pCur = pRootNode;
+	Node* pPrev = NULL;
 
-	if (NULL == rootNode->pRight)
-		return ecRetCode;
-	else {
-		pPrev = rootNode;
-		pCur = rootNode->pRight;
+	if (NULL == pCur)
+		return pCur;
+
+	if (pCur->pRight) {
+		pPrev = pCur;
+		pCur = pCur->pRight;
+	}
+	else
+		return pCur;
+
+	if (NULL == pCur->pLeft) {
+		pPrev->pRight = pCur->pRight;
+		return pCur;
 	}
 
 	while (NULL != pCur->pLeft) {
@@ -246,42 +270,10 @@ ErrorCodes BinaryTree::setToSuccessor(Node* rootNode, Node* pCur, Node* pPrev)
 		pCur = pCur->pLeft;
 	}
 
-	return ecRetCode;
-}
+	pPrev->pLeft = pCur->pRight;
+	pCur->pRight = NULL;
 
-ErrorCodes BinaryTree::deleteGivenNode(Node* pDelNode, Node* pDelPrev, Node* pCur, Node* pPrev) {
-	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
-
-	if (NULL != pDelNode->pLeft || NULL != pDelNode->pRight) {
-		if (NULL != pPrev && pPrev != pDelNode) {
-			if (pPrev->pLeft == pCur)
-				pPrev->pLeft = pCur->pRight;
-			else
-				pPrev->pRight = pCur->pLeft;
-		}
-
-		if (NULL != pDelPrev && pCur != m_pHead) {
-			if (pDelPrev->pLeft == pDelNode)
-				pDelPrev->pLeft = pCur;
-			else
-				pDelPrev->pRight = pCur;
-		}
-
-		if (pDelNode->pRight != pCur)
-			pCur->pRight = pDelNode->pRight;
-		if (pDelNode->pLeft != pCur)
-			pCur->pLeft = pDelNode->pLeft;
-	}
-	else {
-		if (pDelPrev->pLeft == pDelNode)
-			pDelPrev->pLeft = NULL;
-		if (pDelPrev->pRight == pDelNode)
-			pDelPrev->pRight = NULL;
-	}
-
-	delete pDelNode;
-
-	return ecRetCode;
+	return pCur;
 }
 
 int BinaryTree::findHeight(Node* pNode) {
@@ -318,30 +310,55 @@ BinaryTree::Node* BinaryTree::rotateRight(Node* pCur) {
 
 //-----------------------------------------------------------------
 //
-// Mutator Methods
+// Private Operating Methods
 //
 //-----------------------------------------------------------------
-void BinaryTree::toggleAVL() {
-	cout << findHeight(m_pHead) << endl;
 
-	if (m_fIsAVL == false) {
-		m_fIsAVL = true;
-
-		Node* newHead = balanceTree(m_pHead);
-		do {
-			m_pHead = newHead;
-			newHead = balanceTree(m_pHead);
-		} while (m_pHead != newHead);
+ErrorCodes BinaryTree::handleNodeDelete(Node* pDelNode, Node* pDelPrev, Node* pReplNode) {
+	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+	if (NULL == pReplNode) {
+		if (NULL == pDelNode->pLeft && NULL == pDelNode->pRight) {
+			// Leaf delete
+			if (pDelPrev->pLeft == pDelNode)
+				pDelPrev->pLeft = NULL;
+			else
+				pDelPrev->pRight = NULL;
+		}
 	}
-	else 
-		m_fIsAVL = false;
+	else {
+		// Delete anything else
+		pReplNode->pLeft = pDelNode->pLeft;
+		pReplNode->pRight = pDelNode->pRight;
+
+		pDelNode->pLeft = NULL;
+		pDelNode->pRight = NULL;
+
+		if (pDelPrev) {
+			if (pDelPrev->pLeft == pDelNode)
+				pDelPrev->pLeft = pReplNode;
+			else
+				pDelPrev->pRight = pReplNode;
+		}
+	}
+
+	delete pDelNode;
+
+	return ecRetCode;
 }
 
-//-----------------------------------------------------------------
-//
-// Private Methods
-//
-//-----------------------------------------------------------------
+int BinaryTree::countNodes(Node* pNode) {
+	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+
+	int count = 1;
+
+	if (pNode->pLeft)
+		count += countNodes(pNode->pLeft);
+
+	if (pNode->pRight)
+		count += countNodes(pNode->pRight);
+
+	return count;
+}
 
 ErrorCodes BinaryTree::printInOrder(Node* pNode)
 {
@@ -403,6 +420,8 @@ ErrorCodes BinaryTree::printLevelOrder() {
 		try {
 			pCur = q.dequeue();
 			if (NULL == pCur) {
+				if (!q.isEmpty())
+					q.enqueue(pCur);
 				cout << endl;
 				continue;
 			}

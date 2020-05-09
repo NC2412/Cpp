@@ -22,40 +22,46 @@ public:
 	~BinaryTree() { cout << findHeight(m_pHead) << endl; deleteTree(m_pHead); }
 
 	// Operating methods
-	ErrorCodes insertNode(int value);
-	ErrorCodes deleteNode(int delValue);
-	ErrorCodes printTree(int iPrintType);
-	bool hasValue(int value);
+	ErrorCodes insertNode(int);
+	ErrorCodes deleteNode(int);
+	ErrorCodes printTree(int);
+	bool hasValue(int);
 
 	// Mutator methods
-	void toggleAVL();
+	inline void toggleAVL() { if (m_fIsAVL) m_fIsAVL = false; else { m_fIsAVL = true; balanceTree(); } }
+
+	// Getter methods
+	inline int getSize() { return countNodes(m_pHead); }
 
 	// TODO
-	// use delete node as recursive
-	//		- use helper methods
-	// 
 	// closest common ancestor
 	//	- given two nodes, what is their common parent?
+	//  - check for the heights of the nodes, if theyre the same, walk up the list until a parent matches.
 	//
 	// threading siblings
 	//  - left right next
 
 private:
 	// Private helper methods
-	ErrorCodes setToPredecessor(Node* rootNode, Node* pCur, Node* pPrev);
-	ErrorCodes setToSuccessor(Node* rootNode, Node* pCur, Node* pPrev);
-	ErrorCodes deleteGivenNode(Node* pDelNode, Node* pDelPrev, Node* pCur, Node* pPrev);
+	ErrorCodes handleNodeDelete(Node*, Node*, Node*);
 	int findHeight(Node*);
 	Node* rotateLeft(Node*);
 	Node* rotateRight(Node*);
+	
+	// Private getter methods
+	Node* getPredecessor(Node*);
+	Node* getSuccessor(Node*);
 
 	// Private operating methods
-	Node* balanceTree(Node*);
-	ErrorCodes printInOrder(Node* pNode);
-	ErrorCodes printPreOrder(Node* pNode);
-	ErrorCodes printPostOrder(Node* pNode);
+	int countNodes(Node*);
+	ErrorCodes threadTree();
+	ErrorCodes balanceTree();
+	Node* balanceSubTree(Node*);
+	ErrorCodes printInOrder(Node*);
+	ErrorCodes printPreOrder(Node*);
+	ErrorCodes printPostOrder(Node*);
 	ErrorCodes printLevelOrder();
-	ErrorCodes deleteTree(Node* pNode);
+	ErrorCodes deleteTree(Node*);
 
 private:
 	// Member variables

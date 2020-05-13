@@ -1,10 +1,11 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
-bool hasSubString(const char* word, const char* text) {
+int hasSubString(const string word, const string text) {
 
-    if (NULL == word || NULL == text)
-        return 0;
+    if (word.empty() || text.empty())
+        return -1;
 
     bool hasWord = false;
     int i = 0;
@@ -24,18 +25,21 @@ bool hasSubString(const char* word, const char* text) {
         }
 
         if (true == hasWord)
-            return 1;
+            return i;
         else 
             i++;
     }
 
-    return hasWord;
+    return -1;
 }
 
 int main()
 {
-    const char* text = "hello sir, how are you doing today?";
-    const char* word = "?";
-
+    string text;
+    // How can you get more than one word?
+    getline(cin, text);
+    string word;
+    getline(cin, word);
+    
     cout << hasSubString(word, text) << endl;
 }

@@ -36,10 +36,24 @@ int hasSubString(const string word, const string text) {
 int main()
 {
     string text;
-    // How can you get more than one word?
-    getline(cin, text);
     string word;
-    getline(cin, word);
+    char input;
+    bool isSearching = true;
+
+    while (true == isSearching) {
+        cout << endl << "Please enter text to search: " << flush;
+        getline(cin, text);
+        cout << "Please enter a substring to search for in the text: " << flush;
+        getline(cin, word);
+
+        cout << "Substring found at index: " << hasSubString(word, text) << endl;
+
+        cout << endl << "Would you like to search again? (y/n): " << flush;
+        cin >> input;
+        isSearching = (input == 'y') ? true : false;
+
+        cin.ignore();
+    }
     
-    cout << hasSubString(word, text) << endl;
+    cout << endl << "Program exiting." << flush;
 }

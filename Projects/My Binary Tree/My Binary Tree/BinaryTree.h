@@ -11,7 +11,7 @@ private:
 
 		Node* pLeft = NULL;
 		Node* pRight = NULL;
-		//Node* pNext = NULL;
+		Node* pNext = NULL;
 	};
 
 public:

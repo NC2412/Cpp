@@ -6,9 +6,9 @@
 using namespace std;
 
 int main() {
-	BinaryTree tree(true);
+	BinaryTree tree(false);
 
-	int addArray[] = { 20, 3, 1, 5, 15, 6, 88, 14, 2, 12, 4, 123, 5, 6, 7 };
+	int addArray[] = { 20, 3, 1, 5, 15, 6, 88, 14, 2, 12, 4, 123, 5, 6, 7, 1234, 12, 44, 44, 6666, 524, 2634, 3, 32 };
 	int addNum = 0;
 
 	for (int addNum : addArray) {

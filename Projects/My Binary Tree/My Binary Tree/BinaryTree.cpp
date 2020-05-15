@@ -45,6 +45,7 @@ ErrorCodes BinaryTree::insertNode(int value) {
 		m_pHead = balanceSubTree(m_pHead);
 	}
 
+	threadTree();
 	return ecRetCode;
 }
 
@@ -84,6 +85,7 @@ ErrorCodes BinaryTree::deleteNode(int delValue) {
 	if (m_fIsAVL == true)
 		balanceTree();
 
+	threadTree();
 	return ecRetCode;
 }
 
@@ -102,8 +104,8 @@ ErrorCodes BinaryTree::balanceTree() {
 //
 // METHOD: balanceSubTree
 //
-// - balanceTree will follow a postorder method to compare the heights of the 
-// - balanceTree will use helper methods: findHeight, rotateLeft, rotateRight
+// - balanceSubTree will follow a postorder method to compare the heights of the 
+// - balanceSubTree will use helper methods: findHeight, rotateLeft, rotateRight
 //
 BinaryTree::Node* BinaryTree::balanceSubTree(Node* pRoot) {
 
@@ -138,7 +140,6 @@ BinaryTree::Node* BinaryTree::balanceSubTree(Node* pRoot) {
 			// Right Right Case
 			pRoot = rotateLeft(pRoot);
 		}
-		
 	}
 	else {
 		return pRoot;
@@ -148,15 +149,16 @@ BinaryTree::Node* BinaryTree::balanceSubTree(Node* pRoot) {
 	return pRoot;
 }
 
-/*
-	iPrintType values:
-	1 - in-order
-	2 - pre-order
-	3 - post-order
-	4 - level-order
-*/
 ErrorCodes BinaryTree::printTree(int iPrintType)
 {
+	/*
+		iPrintType values:
+		1 - in-order
+		2 - pre-order
+		3 - post-order
+		4 - level-order
+	*/
+
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
 
 	if (NULL == m_pHead)
@@ -360,6 +362,58 @@ int BinaryTree::countNodes(Node* pNode) {
 	return count;
 }
 
+ErrorCodes BinaryTree::threadTree()
+{
+	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
+
+	if (NULL == m_pHead)
+		return ecRetCode;
+
+	Node* pCur = NULL;
+	Node* pPrev = NULL;
+	Queue<Node*> q;
+
+	q.enqueue(m_pHead);
+
+	while (!q.isEmpty()) {
+		pPrev = pCur;
+
+		try {
+			pCur = q.dequeue();
+		}
+		catch (int e) {
+			cout << "Exception caught: " << e << ", empty queue." << endl;
+			return ecRetCode;
+		}
+
+		if (pPrev && pCur)
+			pPrev->pNext = pCur;
+
+		pPrev = pCur;
+
+		if (NULL == pCur) {
+			if (!q.isEmpty())
+				q.enqueue(pCur);
+			cout << endl;
+			continue;
+		}
+		else
+			cout << pCur->value << ", " << flush;
+
+		if (q.isEmpty()) {
+			// Creating sentinel
+			Node* sentinel = NULL;
+			q.enqueue(sentinel);
+		} 
+		if (pCur->pLeft)
+			q.enqueue(pCur->pLeft);
+		if (pCur->pRight)
+			q.enqueue(pCur->pRight);
+	}
+
+	return ecRetCode;
+}
+
 ErrorCodes BinaryTree::printInOrder(Node* pNode)
 {
 	ErrorCodes ecRetCode = ErrorCodes::SUCCESS;
@@ -419,6 +473,7 @@ ErrorCodes BinaryTree::printLevelOrder() {
 	while (!q.isEmpty()) {
 		try {
 			pCur = q.dequeue();
+
 			if (NULL == pCur) {
 				if (!q.isEmpty())
 					q.enqueue(pCur);

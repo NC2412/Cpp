@@ -58,10 +58,12 @@ ErrorCodes BinaryTree::deleteNode(int delValue) {
 	while (pDelNode->value != delValue) {
 		pDelPrev = pDelNode;
 
-		if (delValue < pDelNode->value)
+		if (delValue < pDelNode->value && pDelNode->pLeft)
 			pDelNode = pDelNode->pLeft;
-		else
+		else if (delValue > pDelNode->value && pDelNode->pRight)
 			pDelNode = pDelNode->pRight;
+		else
+			return ecRetCode;
 	}
 
 	if (pDelNode->pLeft && pDelNode->pRight) {
@@ -116,7 +118,7 @@ BinaryTree::Node* BinaryTree::balanceSubTree(Node* pRoot) {
 		pRoot->pRight = balanceSubTree(pRoot->pRight);
 
 	// Left - right heights of the tree. if iHDiff is -, right side has greater height, if iHDiff is +, left side has greater height.
-	int iHDiff = findHeight(pRoot->pLeft) - findHeight(pRoot->pRight);
+	int iHDiff = getHeight(pRoot->pLeft) - getHeight(pRoot->pRight);
 
 	// Becuase the difference is greater than one, there MUST be at least two nodes on one of the sides of the tree
 	if  (1 < iHDiff && NULL != pRoot->pLeft) {
@@ -187,6 +189,52 @@ ErrorCodes BinaryTree::printTree(int iPrintType)
 	}
 	
 	return ecRetCode;
+}
+
+int BinaryTree::findClosestCommonAncestor(int val1, int val2)
+{
+	Node* pCur = m_pHead;
+	Node* pLNode = NULL;
+	Node* pRNode = NULL;
+	int commonAncestorVal = -1;
+
+	if (NULL == pCur)
+		return -1;
+
+	// Set nodes to the correct node and return -1 if the nodes are the same.
+	if (val1 < val2) {
+		pLNode = getNode(val1);
+		pRNode = getNode(val2);
+	}
+	else if (val2 < val1) {
+		pLNode = getNode(val2);
+		pRNode = getNode(val1);
+	}
+	else
+		return -1;
+
+	// Return -1 if either nodes are NULL.
+	if (NULL == pLNode || NULL == pRNode)
+		return -1;
+
+	// If either of the nodes are the head, return the head value
+	if (pLNode == m_pHead || pRNode == m_pHead)
+		return m_pHead->value;
+	
+
+	while (NULL != pCur) {
+		if (pLNode->value <= pCur->value && pCur->value <= pRNode->value)
+			commonAncestorVal = pCur->value;
+
+		if (pLNode->value < pCur->value && pCur->value > pRNode->value)
+			pCur = pCur->pLeft;
+		else if (pLNode->value > pCur->value && pCur->value < pRNode->value)
+			pCur = pCur->pRight;
+		else
+			break;
+	}
+	
+	return commonAncestorVal;
 }
 
 bool BinaryTree::hasValue(int value) {
@@ -278,7 +326,25 @@ BinaryTree::Node* BinaryTree::getSuccessor(Node* pRootNode) {
 	return pCur;
 }
 
-int BinaryTree::findHeight(Node* pNode) {
+BinaryTree::Node* BinaryTree::getNode(int value) {
+	Node* node = m_pHead;
+
+	while (node->value != value) {
+		if (value < node->value && node->pLeft)
+			node = node->pLeft;
+		else if (value > node->value && node->pRight)
+			node = node->pRight;
+		else
+			return NULL;
+	}
+
+	return node;
+}
+
+/*
+	getHeight takes in a node and traversess its subtree to find the height.
+*/
+int BinaryTree::getHeight(Node* pNode) {
 	if (NULL == pNode)
 		return 0; 
 
@@ -286,14 +352,37 @@ int BinaryTree::findHeight(Node* pNode) {
 		return 1;
 	}
 	else if (pNode->pLeft && pNode->pRight) {
-		int iLHeight = ( findHeight(pNode->pLeft) + 1 );
-		int iRHeight = ( findHeight(pNode->pRight) + 1 );
-		return (iLHeight > iRHeight) ? iLHeight : iRHeight;
+		int iLHeight = ( getHeight(pNode->pLeft) + 1 );
+		int iRHeight = ( getHeight(pNode->pRight) + 1 );
+		return (iLHeight >= iRHeight) ? iLHeight : iRHeight;
 	}
 	else if (pNode->pLeft && NULL == pNode->pRight)
-		return ( findHeight(pNode->pLeft) + 1 );
+		return ( getHeight(pNode->pLeft) + 1 );
 	else
-		return ( findHeight(pNode->pRight) + 1 );
+		return ( getHeight(pNode->pRight) + 1 );
+}
+
+/*
+	getDepth returns the depth of the given node from the root node.
+*/
+int BinaryTree::getDepth(Node* pNode) {
+	Node* pCur = m_pHead;
+	int depth = 0;
+
+	if (NULL == pCur || NULL == pNode)
+		return -1;
+
+	while (pCur->value != pNode->value) {
+		if ((NULL == pCur->pLeft && pNode->value < pCur->value) || (NULL == pCur->pRight && pNode->value > pCur->value))
+			return -1;
+
+		if (pNode->value < pCur->value)
+			pCur = pCur->pLeft;
+		else
+			pCur = pCur->pRight;
+	}
+
+	return depth;
 }
 
 BinaryTree::Node* BinaryTree::rotateLeft(Node* pCur) {
@@ -394,11 +483,9 @@ ErrorCodes BinaryTree::threadTree()
 		if (NULL == pCur) {
 			if (!q.isEmpty())
 				q.enqueue(pCur);
-			cout << endl;
+
 			continue;
 		}
-		else
-			cout << pCur->value << ", " << flush;
 
 		if (q.isEmpty()) {
 			// Creating sentinel

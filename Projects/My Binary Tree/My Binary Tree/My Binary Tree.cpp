@@ -8,7 +8,7 @@ using namespace std;
 int main() {
 	BinaryTree tree(false);
 
-	int addArray[] = { 20, 3, 1, 5, 15, 6, 88, 14, 2, 12, 4, 123, 5, 6, 7, 1234, 12, 44, 44, 6666, 524, 2634, 3, 32 };
+	int addArray[] = { 10, 5, 15, 12, 4, 5, 19, 13, 1, 2, 20, 123, 1432, 54, 12, 541, 76, 56, 345, 24, 56, 345, 634, 5634, 5634, 2, 312 };
 	int addNum = 0;
 
 	for (int addNum : addArray) {
@@ -39,12 +39,14 @@ int main() {
 
 	cout << endl << "NUMBER OF NODES: " << tree.getSize() << endl;
 
-	tree.deleteNode(1);
+	tree.deleteNode(119);
 
 	for (int i = 1; i <= 4; i++) {
 		tree.printTree(i);
 		cout << endl;
 	}
+
+	cout << "Closest common ancestor: " << tree.findClosestCommonAncestor(24, 541) << endl;
 
 	cout << endl << "NUMBER OF NODES: " << tree.getSize() << endl;
 

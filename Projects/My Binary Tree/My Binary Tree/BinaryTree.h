@@ -33,11 +33,6 @@ public:
 	// Getter methods
 	inline int getSize() { return countNodes(m_pHead); }
 
-	// TODO
-	// closest common ancestor
-	//	- given two nodes, what is their common parent?
-	//  - check for the heights of the nodes, if theyre the same, walk up the list until a parent matches.
-
 private:
 	// Private helper methods
 	ErrorCodes	handleNodeDelete(Node*, Node*, Node*);

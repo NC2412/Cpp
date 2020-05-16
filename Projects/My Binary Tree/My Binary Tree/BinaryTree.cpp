@@ -194,41 +194,20 @@ ErrorCodes BinaryTree::printTree(int iPrintType)
 int BinaryTree::findClosestCommonAncestor(int val1, int val2)
 {
 	Node* pCur = m_pHead;
-	Node* pLNode = NULL;
-	Node* pRNode = NULL;
 	int commonAncestorVal = -1;
 
-	if (NULL == pCur)
+	if (NULL == pCur || NULL == getNode(val1) || NULL == getNode(val2))
 		return -1;
-
-	// Set nodes to the correct node and return -1 if the nodes are the same.
-	if (val1 < val2) {
-		pLNode = getNode(val1);
-		pRNode = getNode(val2);
-	}
-	else if (val2 < val1) {
-		pLNode = getNode(val2);
-		pRNode = getNode(val1);
-	}
-	else
-		return -1;
-
-	// Return -1 if either nodes are NULL.
-	if (NULL == pLNode || NULL == pRNode)
-		return -1;
-
-	// If either of the nodes are the head, return the head value
-	if (pLNode == m_pHead || pRNode == m_pHead)
-		return m_pHead->value;
-	
 
 	while (NULL != pCur) {
-		if (pLNode->value <= pCur->value && pCur->value <= pRNode->value)
+		if (val1 <= pCur->value && pCur->value <= val2)
+			commonAncestorVal = pCur->value;
+		else if (val1 >= pCur->value && pCur->value >= val2)
 			commonAncestorVal = pCur->value;
 
-		if (pLNode->value < pCur->value && pCur->value > pRNode->value)
+		if (val1 < pCur->value && pCur->value > val2)
 			pCur = pCur->pLeft;
-		else if (pLNode->value > pCur->value && pCur->value < pRNode->value)
+		else if (val1 > pCur->value && pCur->value < val2)
 			pCur = pCur->pRight;
 		else
 			break;

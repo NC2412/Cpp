@@ -351,7 +351,7 @@ int BinaryTree::getDepth(Node* pNode) {
 	if (NULL == pCur || NULL == pNode)
 		return -1;
 
-	while (pCur->value != pNode->value) {
+	while (NULL != pCur && pCur->value != pNode->value) {
 		if ((NULL == pCur->pLeft && pNode->value < pCur->value) || (NULL == pCur->pRight && pNode->value > pCur->value))
 			return -1;
 

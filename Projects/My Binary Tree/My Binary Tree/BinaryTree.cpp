@@ -122,32 +122,20 @@ BinaryTree::Node* BinaryTree::balanceSubTree(Node* pRoot) {
 
 	// Becuase the difference is greater than one, there MUST be at least two nodes on one of the sides of the tree
 	if  (1 < iHDiff && NULL != pRoot->pLeft) {
-		// Left Right Case
-		if (NULL != pRoot->pLeft->pRight && (pRoot->pLeft->pRight->pLeft || pRoot->pLeft->pRight->pRight)) {
+		if (NULL != pRoot->pLeft->pRight && (pRoot->pLeft->pRight->pLeft || pRoot->pLeft->pRight->pRight)) 
+			// Left Right Case
 			pRoot->pLeft = rotateLeft(pRoot->pLeft);
-			pRoot = rotateRight(pRoot);
-		}
-		else {
-			// Left Left Case
-			pRoot = rotateRight(pRoot);
-		}
+		
+		pRoot = rotateRight(pRoot);
 	}
 	else if (-1 > iHDiff && NULL != pRoot->pRight) {
-		if (NULL != pRoot->pRight->pLeft && (pRoot->pRight->pLeft->pLeft || pRoot->pRight->pLeft->pRight)) {
+		if (NULL != pRoot->pRight->pLeft && (pRoot->pRight->pLeft->pLeft || pRoot->pRight->pLeft->pRight)) 
 			// Right Left Case
 			pRoot->pRight = rotateRight(pRoot->pRight);
-			pRoot = rotateLeft(pRoot);
-		}
-		else {
-			// Right Right Case
-			pRoot = rotateLeft(pRoot);
-		}
-	}
-	else {
-		return pRoot;
+
+		pRoot = rotateLeft(pRoot);
 	}
 
-	// THIS LINE MAY CAUSE A BUG, KEEP THAT IN MIND, TEST CASES!!!!!!!!!!!!!!!!!!!!!
 	return pRoot;
 }
 
@@ -212,7 +200,7 @@ int BinaryTree::findClosestCommonAncestor(int val1, int val2)
 		else
 			break;
 	}
-	
+
 	return commonAncestorVal;
 }
 
@@ -439,6 +427,7 @@ ErrorCodes BinaryTree::threadTree()
 
 	Node* pCur = NULL;
 	Node* pPrev = NULL;
+	Node* endLine = NULL;
 	Queue<Node*> q;
 
 	q.enqueue(m_pHead);
@@ -456,6 +445,11 @@ ErrorCodes BinaryTree::threadTree()
 
 		if (pPrev && pCur)
 			pPrev->pNext = pCur;
+
+		if (NULL == pCur)
+			endLine = pPrev;
+		if (NULL == pPrev && NULL != endLine)
+			endLine->pNext = pCur;
 
 		pPrev = pCur;
 

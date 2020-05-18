@@ -5,9 +5,9 @@
 using namespace std;
 
 int main() {
-	BinaryTree tree(false);
+	BinaryTree tree(true);
 
-	int addArray[] = { 20, 10, 30, 5, 15, 25, 32, 7, 27, 31, 33 };
+	int addArray[] = { 20, 10, 30, 5 };
 	int addNum = 0;
 
 	for (int addNum : addArray) {

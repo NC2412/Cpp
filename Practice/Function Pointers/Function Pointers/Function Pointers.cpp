@@ -1,5 +1,4 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
 using namespace std;
 
@@ -10,6 +9,20 @@ using namespace std;
 
 void test(int value) {
 	cout << "Hello: " << value << endl;
+}
+
+bool match(string text) {
+	return text.size() == 3;
+}
+
+int countStrings(vector<string>& texts, bool (*match)(string test)) {
+	int count = 0;
+	for (int i = 0; i < texts.size(); i++) {
+		if (match(texts[i]))
+			count++;
+	}
+
+	return count;
 }
 
 int main() {
@@ -30,6 +43,14 @@ int main() {
 	// You need the () wrapping the name and * again in order to dereference the function call, not the return value.
 	// *pTest() would call the function and dereference the return value.
 	(*pTest)(8);
+
+	vector<string> texts;
+	texts.push_back("one");
+	texts.push_back("two");
+	texts.push_back("three");
+
+	// When passing a function pointer, you only need to pass the name of the function, without ().
+	cout << countStrings(texts, match) << endl;
 
 	return 0;
 }

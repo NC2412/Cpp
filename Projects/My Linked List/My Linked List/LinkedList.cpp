@@ -175,22 +175,20 @@ ErrorCodes LinkedList::reverseList() {
 bool LinkedList::hasCycle() {
 	// I needed a hint(s) for this one :/
 	Node* pBack = m_pHead;
-	Node* pFront = m_pHead->pNext;
-	int iBack = 2;
-	int cur = 1;
+	Node* pFront = pBack;
+	int inc = 0;
 
 	while (NULL != pFront) {
 
 		if (pFront == pBack)
 			return true;
 
-		if (cur == iBack) {
+		if (inc % 2 == 0) {
 			pBack = pBack->pNext;
-			cur = 1;
 		}
 	
 		pFront = pFront->pNext;
-		cur++;
+		inc++;
 	}
 
 	return false;
@@ -200,6 +198,9 @@ int LinkedList::nFromTail(int nthfromtail)
 {
 	Node* pFront = m_pHead->pNext;
 	Node* pBack = m_pHead;
+
+	if (NULL == m_pHead)
+		return 0;
 
 	for (int i = 0; i < nthfromtail; i++) {
 		if (NULL == pFront->pNext)
@@ -250,16 +251,18 @@ ErrorCodes LinkedList::insertSorted(int value) {
 	if (NULL == pCur) {
 		m_pHead = newNode;
 		m_pTail = m_pHead;
+		return ecRetCode;
 	}
 
-	while (NULL != pCur) {
-		if (value <= pCur->value) {
+	if (value <= pCur->value) {
 			// Check if value is less than the head value.
 			m_pHead = newNode;
 			m_pHead->pNext = pCur;
 			return ecRetCode;
-		}
-		else if (pCur->value < value && ((NULL == pCur->pNext) || (value <= pCur->pNext->value))) {
+	}
+
+	while (NULL != pCur) {
+		if (pCur->value < value && ((NULL == pCur->pNext) || (value <= pCur->pNext->value))) {
 			// Check if the value is greater than pCur's and less than or equal to the next value. Or if pCur is the tail.
 			// The NULL check must be first as not to accedentally point to NULL memory.
 			newNode->pNext = pCur->pNext;

@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\My Queue\My Queue\Queue.h" />
     <ClInclude Include="BinaryTree.h" />
+    <ClInclude Include="MyString.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

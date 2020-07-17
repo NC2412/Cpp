@@ -29,5 +29,8 @@
     <ClInclude Include="..\..\My Queue\My Queue\Queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

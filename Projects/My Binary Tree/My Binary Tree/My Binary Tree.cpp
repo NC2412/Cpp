@@ -5,14 +5,13 @@
 using namespace std;
 
 int main() {
-	BinaryTree tree(true);
+	BinaryTree<int> tree(true);
 
 	int addArray[] = { 20, 10, 30, 5 };
-	int addNum = 0;
+	//string addArray[] = { "hello", "hola", "bonjour", "teeth", "food", "dog" };
 
-	for (int addNum : addArray) {
-		//addNum = rand() % 100;
- 		if (ErrorCodes::FAILURE == tree.insertNode(addNum)) {
+	for (auto addVal : addArray) {
+ 		if (ErrorCodes::FAILURE == tree.insertNode(addVal)) {
 			return 1;
 		}
 	}
@@ -39,6 +38,7 @@ int main() {
 	cout << endl << "NUMBER OF NODES: " << tree.getSize() << endl;
 
 	tree.deleteNode(119);
+	//tree.deleteNode("hellO");
 
 	for (int i = 1; i <= 4; i++) {
 		tree.printTree(i);
@@ -46,6 +46,7 @@ int main() {
 	}
 
 	cout << "Closest common ancestor: " << tree.findClosestCommonAncestor(112, 7) << endl;
+	//cout << "Closest common ancestor: " << tree.findClosestCommonAncestor("hello", "hola") << endl;
 
 	cout << endl << "NUMBER OF NODES: " << tree.getSize() << endl;
 

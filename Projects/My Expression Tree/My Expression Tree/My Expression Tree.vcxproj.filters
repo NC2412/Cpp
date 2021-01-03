@@ -24,6 +24,9 @@
     <ClCompile Include="StringVector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BinaryTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExpressionTree.h">
@@ -32,7 +35,7 @@
     <ClInclude Include="StringVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\My Binary Tree\My Binary Tree\BinaryTree.h">
+    <ClInclude Include="BinaryTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

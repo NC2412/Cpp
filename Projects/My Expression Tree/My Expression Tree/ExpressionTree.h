@@ -5,13 +5,28 @@
 class ExpressionTree
 {
 public:
-	ExpressionTree();
-	~ExpressionTree();
+	ExpressionTree() {}
+	~ExpressionTree() {}
+	
+	// 1 for prefix
+	// 2 for postfix
+	bool buildTree(int choice, string expression);
 
-	StringVector buildPrefix();
-	StringVector buildPostFix();
+	string printTree() { bTree.print(0); }
 
 private:
-	
+	BinaryTree bTree;
+
+	StringVector prefix;
+	StringVector postfix;
+	StringVector infix;
+
+	StringVector tokenize(string);
+	void buildPrefix(string);
+	void buildPostFix(string);
+
+	bool isOperator(char);
+
+	int getPrecedence(string);
 };
 

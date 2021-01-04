@@ -7,7 +7,7 @@ class StringVector
 public:
 	StringVector() { size = 0; capacity = 10; items = new string[capacity]; }
 	StringVector(int size) : capacity(size), size(0) { items = new string[capacity]; }
-	~StringVector() { delete[] items; }
+	~StringVector();
 
 	bool add(string item) { return add(this->size, item); }
 	bool add(int, string);

@@ -21,6 +21,13 @@ bool StringVector::add(int index, string item)
     return 1;
 }
 
+StringVector::~StringVector()
+{
+    for (int i = 0; i < capacity; i++)
+        cout << items[i] << ", " << flush;
+    delete[] items;
+}
+
 string StringVector::remove(string item)
 {
     int index = indexOf(item);
